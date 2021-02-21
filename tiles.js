@@ -24,16 +24,16 @@ class Tile {
 		rectMode(CORNER);
 		strokeWeight(2);
 
-		let textColor = color(220);
-		let buttonColor = color(20);
-		let textColorHover = color(20);
-		let buttonColorHover = color(220);
+		let textColor = DRAW_COLOR;
+		let buttonColor = BACKGROUND_COLOR;
+		let textColorHover = BACKGROUND_COLOR;
+		let buttonColorHover = DRAW_COLOR;
 
 		if (this.c != null) {
 
 			textColor = this.c;
-			buttonColor = color(20);
-			textColorHover = color(20);
+			buttonColor = color(BACKGROUND_COLOR);
+			textColorHover = color(BACKGROUND_COLOR);
 			buttonColorHover = this.c;
 		}
 
@@ -66,20 +66,28 @@ class Tile {
 
 class PopTile extends Tile {
 	constructor(x, y) {
-		super(x, y, "dépiler(P)");
+		let t = "dépiler(P)";
+		if (!isStack) {
+			t = "défiler(F)";
+		}
+		super(x, y, t);
 	}
 }
 
 
 class PushTile extends Tile {
 	constructor(x, y, t) {
-		if (t != null) {
+		let dataType = "empiler(P,";
+		if (!isStack) {
+			dataType = "enfiler(F,";
+		}
 
-			super(x, y, "empiler(P, " + t + ")");
+		if (t != null) {
+			super(x, y, dataType + t + ")");
 			this.v = t;
 		} else {
 
-			super(x, y, "empiler(P, x)");
+			super(x, y, dataType + "x)");
 		}
 	}
 }
@@ -87,7 +95,12 @@ class PushTile extends Tile {
 
 class ResetTile extends Tile {
 	constructor(x, y, t) {
-		super(x, y, "P = pile()");
+
+		let dataType = "P = pile(P)";
+		if (!isStack) {
+			dataType = "F = file(F)";
+		}
+		super(x, y, dataType);
 	}
 }
 

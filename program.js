@@ -1,14 +1,14 @@
 class Program {
 	constructor(stackMode) {
 		if (stackMode) {
-			this.stack = new Stack((width + PROGX) / 2, 0.8 * height);
+			this.stack = new Stack((width - PROGX) / 2, 0.8 * height);
 			this.isStack = true;
 		} else {
-			this.stack = new Queue(PROGX + 0.75 * (width - PROGX), 0.5 * height);
+			this.stack = new Queue(PROGX, 0.5 * height);
 			this.isStack = false;
 		}
 		this.instructions = [];
-		this.x = PROGX / 2;
+		this.x = width - PROGX / 2;
 		this.initialY = 0.03 * height + 10;
 		this.y = this.initialY;
 	}
@@ -17,17 +17,13 @@ class Program {
 		if (this.isValid(t)) {
 			if (t instanceof ResetTile) {
 				if (this.isStack) {
-					this.stack = new Stack((width + PROGX) / 2, 0.8 * height);
+					this.stack = new Stack((width - PROGX) / 2, 0.8 * height);
 				} else {
-					this.stack = new Queue(PROGX + 0.75 * (width - PROGX), 0.5 * height);
+					this.stack = new Queue(PROGX, 0.5 * height);
 				}
 			}
 			if (t instanceof PopTile) {
-				if (this.isStack) {
-					this.stack.pop();
-				} else {
-					this.stack.pop(0);
-				}
+				this.stack.pop();
 			}
 			if (t instanceof PushTile) {
 				this.stack.push(new ValueTile(0, 0, t.v));
@@ -56,7 +52,11 @@ class Program {
 	}
 
 	clear() {
-		this.stack = new Stack((width + PROGX) / 2, 0.8 * height);
+		if (this.isStack) {
+			this.stack = new Stack((width - PROGX) / 2, 0.8 * height);
+		} else {
+			this.stack = new Queue(PROGX, 0.5 * height);
+		}
 		this.instructions = [];
 		this.y = this.initialY;
 	}

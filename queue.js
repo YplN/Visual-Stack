@@ -13,7 +13,7 @@ class Queue {
 	}
 
 	push(v) {
-		v.x = this.x - (this.values.length + 1) * this.hItem;
+		v.x = this.x + (this.values.length + 1) * this.hItem;
 		v.y = this.y;
 		// if (this.access != null) {
 		// 	this.access.access = false;
@@ -46,7 +46,7 @@ class Queue {
 			this.popped = this.values.shift();
 
 		for (let v of this.values) {
-			v.x += this.hItem;
+			v.x -= this.hItem;
 		}
 		if (this.values.length > 0) {
 			this.access = this.values[0];
@@ -60,18 +60,6 @@ class Queue {
 
 
 	show() {
-
-		for (let i = 0; i < this.values.length; i++) {
-			if (i == this.dragging) {
-				this.values[i].showAt(mouseX, mouseY, false);
-			} else {
-				this.values[i].show(false);
-			}
-		}
-
-		// stroke(255);
-		// line(this.x - this.w, this.y - this.hItem / 2, this.x + this.w, this.y - this.hItem / 2);
-
 
 
 		if (this.dragging != null) {
@@ -87,6 +75,20 @@ class Queue {
 				this.showHead();
 			}
 		}
+
+		for (let i = 0; i < this.values.length; i++) {
+			if (i == this.dragging) {
+				this.values[i].showAt(mouseX, mouseY, false);
+			} else {
+				this.values[i].show(false);
+			}
+		}
+
+		// stroke(255);
+		// line(this.x - this.w, this.y - this.hItem / 2, this.x + this.w, this.y - this.hItem / 2);
+
+
+
 	}
 
 
@@ -96,13 +98,13 @@ class Queue {
 
 
 	showHead() {
-		stroke(255);
-		line(this.access.x + this.w / 2, this.access.y, this.access.x + this.w, this.access.y);
+		stroke(DRAW_COLOR);
+		line(this.access.x, this.access.y + this.w / 2, this.access.x, this.access.y + this.w);
 
-		fill(255);
-		stroke(0);
-		textAlign(LEFT, CENTER);
-		text("Sommet", this.access.x + this.w + 15, this.access.y);
+		fill(DRAW_COLOR);
+		textAlign(CENTER, CENTER);
+		noStroke();
+		text("Sommet", this.access.x, this.access.y + this.w + 15);
 
 
 	}

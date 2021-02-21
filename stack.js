@@ -42,18 +42,6 @@ class Stack {
 
 	show() {
 
-		for (let i = 0; i < this.values.length; i++) {
-			if (i == this.dragging) {
-				this.values[i].showAt(mouseX, mouseY);
-			} else {
-				this.values[i].show();
-			}
-		}
-
-		stroke(255);
-		line(this.x - this.w, this.y - this.hItem / 2, this.x + this.w, this.y - this.hItem / 2);
-
-
 
 		if (this.dragging != null) {
 			if (this.values[this.dragging].access) {
@@ -68,6 +56,21 @@ class Stack {
 				this.showHead();
 			}
 		}
+
+
+		for (let i = 0; i < this.values.length; i++) {
+			if (i == this.dragging) {
+				this.values[i].showAt(mouseX, mouseY);
+			} else {
+				this.values[i].show();
+			}
+		}
+
+		stroke(255);
+		line(this.x - this.w, this.y - this.hItem / 2, this.x + this.w, this.y - this.hItem / 2);
+
+
+
 	}
 
 
@@ -81,11 +84,9 @@ class Stack {
 		line(this.access.x + this.w / 2, this.access.y, this.access.x + this.w, this.access.y);
 
 		fill(255);
-		stroke(0);
+		noStroke();
 		textAlign(LEFT, CENTER);
 		text("Sommet", this.access.x + this.w + 15, this.access.y);
-
-
 	}
 
 
