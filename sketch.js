@@ -1,3 +1,5 @@
+//// TODO: textes alternatifs, bouton switch pile/file, bandeau erreur a replacer, fleche sommet pour file
+
 let error = false;
 let errorEmptyStack = false;
 let errorStackNotCreated = false;
@@ -5,407 +7,6 @@ let COLOR_POP;
 let font;
 
 let PROGX = 200;
-
-
-class Stack {
-
-	constructor(x, y) {
-		this.values = [];
-		this.x = x;
-		this.y = y;
-		this.popped = null;
-		this.w = 150;
-		this.hItem = 50;
-		this.access = null;
-
-		this.dragging = null;
-
-	}
-
-	push(v) {
-		v.x = this.x;
-		v.y = this.y - (this.values.length + 1) * this.hItem;
-		if (this.access != null) {
-			this.access.access = false;
-			this.access.c = null;
-		}
-		this.access = v;
-		v.access = true;
-
-		this.values.push(v);
-
-	}
-
-	pop() {
-		if (this.values.length > 0)
-			this.popped = this.values.pop();
-
-		if (this.values.length > 0) {
-			this.access = this.values[this.values.length - 1];
-			this.values[this.values.length - 1].access = true;
-			this.values[this.values.length - 1].c = color(50, 250, 90);
-		} else
-			this.acess = null;
-	}
-
-
-	show() {
-
-		for (let i = 0; i < this.values.length; i++) {
-			if (i == this.dragging) {
-				this.values[i].showAt(mouseX, mouseY);
-			} else {
-				this.values[i].show();
-			}
-			// pop();
-		}
-
-		stroke(255);
-		line(this.x - this.w, this.y - this.hItem / 2, this.x + this.w, this.y - this.hItem / 2);
-
-
-
-		if (this.dragging != null) {
-			if (this.values[this.dragging].access) {
-
-				let c = COLOR_POP;
-				if (isOnPopArea()) {
-					c = COLOR_POP_HOVER;
-				}
-				displayPopArea(c);
-			} else {
-				error = true;
-				this.showHead();
-			}
-		}
-	}
-
-
-	isEmpty() {
-		return this.values.length == 0;
-	}
-
-
-	showHead() {
-		stroke(255);
-		line(this.access.x + this.w / 2, this.access.y, this.access.x + this.w, this.access.y);
-
-		fill(255);
-		stroke(0);
-		textAlign(LEFT, CENTER);
-		text("Sommet", this.access.x + this.w + 15, this.access.y);
-
-
-	}
-
-	/*
-	  print() {
-	    console.log("Start Stack ---- ")
-	    for (let i = this.values.length - 1; i >= 0; i--) {
-	      console.log(this.values[i]);
-	    }
-
-	    console.log("End Stack ---- ")
-	  }
-
-
-
-	  showItem(i, v) {
-	    fill(250, 88, 88)
-	    if (i == 0) { //this.values.length - 1) {
-	      fill(50, 250, 90);
-	    }
-
-	    strokeWeight(3);
-	    stroke(0);
-	    rect(this.x - this.w / 2, this.y - (i + 1) * this.hItem, this.w, this.hItem, 10);
-	    textAlign(CENTER, CENTER);
-	    textSize(30);
-	    fill(0);
-	    noStroke();
-	    text(v, this.x, this.y - (i + 1) * this.hItem + this.hItem / 2);
-	  }
-
-	  showItemDragging(i, v, x, y) {
-
-	    fill(250, 88, 88)
-	    if (i == 0) { //this.values.length - 1) {
-	      let c = COLOR_POP;
-	      if (isOnPopArea()) {
-	        c = COLOR_POP_HOVER;
-	      }
-	      displayPopArea(c);
-	      stroke(0);
-	      strokeWeight(1);
-	      textSize(50);
-	      fill(220);
-	      textAlign(CENTER);
-	      text("dépiler(P)", 0.85 * width, 0.5 * height);
-	      fill(50, 250, 90);
-	    } else {
-	      error = true;
-	    }
-
-
-	    strokeWeight(3);
-	    stroke(0);
-	    rect(x - this.w / 2, y - this.hItem / 2, this.w, this.hItem, 10);
-	    textAlign(CENTER, CENTER);
-	    textSize(30);
-	    fill(0);
-	    noStroke();
-	    text(v, x, y);
-	  }
-
-
-	  show() {
-	    strokeWeight(3);
-	    for (let i = this.values.length - 1; i >= 0; i--) {
-	      if (i == this.dragging) {
-	        this.showItemDragging(i, this.values[i], mouseX, mouseY);
-	      } else {
-	        this.showItem(i, this.values[i]);
-	      }
-	    }
-	    stroke(255);
-	    line(this.x - this.w, this.y, this.x + this.w, this.y);
-
-	    if (error == true)
-	      this.showHead();
-
-	  }
-
-
-
-
-	  */
-
-	// isOnItem(i, x, y) {
-	//   return (abs(x - this.x) <= this.w / 2 && y <= (this.y - (i + 0.5) * this.hItem ) && (this.y - (i + 1.5) * this.hItem) <= y);
-	// }
-
-	isOn(x, y) {
-		for (let i = 0; i < this.values.length; i++) {
-			if (this.values[i].isOn(x, y)) {
-				return i;
-			}
-		}
-		return null;
-	}
-
-
-}
-
-class Tile {
-	constructor(x, y, t) {
-		this.x = x;
-		this.y = y;
-		this.t = t;
-		this.dragging = false;
-		this.c = null;
-
-		let bbox = font.textBounds(t, 0, 0, 20);
-		this.w = bbox.w + 20;
-		this.h = bbox.h + 20;
-	}
-
-	show() {
-		this.showAt(this.x, this.y);
-	}
-
-	isOn(x, y) {
-		return (abs(x - this.x) <= this.w / 2 && abs(y - this.y) <= this.h / 2);
-	}
-
-
-	showAt(x, y) {
-		rectMode(CORNER);
-		strokeWeight(2);
-
-		let textColor = color(220);
-		let buttonColor = color(20);
-		let textColorHover = color(20);
-		let buttonColorHover = color(220);
-
-		if (this.c != null) {
-
-			textColor = this.c;
-			buttonColor = color(20);
-			textColorHover = color(20);
-			buttonColorHover = this.c;
-		}
-
-
-		if (!this.isOn(mouseX, mouseY)) {
-			stroke(textColor);
-			fill(buttonColor);
-		} else {
-			stroke(textColorHover);
-			fill(buttonColorHover);
-		}
-		rect(x - this.w / 2, y - this.h / 2, this.w, this.h, 10);
-
-		textAlign(CENTER, BASELINE);
-		textFont(font);
-		textSize(20);
-		noStroke();
-
-		if (!this.isOn(mouseX, mouseY)) {
-			fill(textColor);
-		} else {
-			fill(textColorHover);
-		}
-
-		text(this.t, x, y + 10);
-	}
-
-}
-
-
-class PopTile extends Tile {
-	constructor(x, y) {
-		super(x, y, "dépiler(P)");
-	}
-}
-
-
-class PushTile extends Tile {
-	constructor(x, y, t) {
-		if (t != null) {
-
-			super(x, y, "empiler(P, " + t + ")");
-			this.v = t;
-		} else {
-
-			super(x, y, "empiler(P, x)");
-		}
-	}
-}
-
-
-class ResetTile extends Tile {
-	constructor(x, y, t) {
-		super(x, y, "P = pile()");
-	}
-}
-
-
-class ValueTile extends Tile {
-
-	constructor(x, y, t, access, c) {
-		super(x, y, t);
-		if (access != null) {
-			this.access = access;
-		} else {
-			this.access = false;
-		}
-
-
-
-		if (c != null) {
-			this.c = c;
-		}
-
-		this.w = 150;
-		this.hItem = 50;
-	}
-
-	show() {
-		this.showAt(this.x, this.y);
-	}
-
-	showAt(x, y) {
-		if (this.c == null) {
-			if (this.access) {
-				this.c = color(50, 250, 90);
-			} else {
-				this.c = color(250, 88, 88);
-			}
-		}
-
-		fill(this.c);
-		strokeWeight(3);
-		stroke(0);
-		rect(x - this.w / 2, y - this.hItem / 2, this.w, this.hItem, 10);
-		textAlign(CENTER, CENTER);
-		textSize(30);
-		fill(0);
-		noStroke();
-		text(this.t, x, y);
-	}
-
-	isOn(x, y) {
-		return (abs(x - this.x) <= this.w / 2 && abs(y - this.y) <= this.hItem / 2);
-	}
-
-}
-
-class Program {
-	constructor() {
-		this.stack = new Stack((width + PROGX) / 2, 0.8 * height);
-		this.instructions = [];
-		this.x = PROGX / 2;
-		this.initialY = 0.03 * height + 10;
-		this.y = this.initialY;
-	}
-
-	pushTile(t) {
-		if (this.isValid(t)) {
-			if (t instanceof ResetTile) {
-				this.stack = new Stack((width + PROGX) / 2, 0.8 * height);
-			}
-			if (t instanceof PopTile) {
-				this.stack.pop();
-			}
-			if (t instanceof PushTile) {
-				this.stack.push(new ValueTile(0, 0, t.v));
-			}
-			this.instructions.push(t);
-
-			if (this.y + this.instructions.length * 45 > height) {
-				this.y = height - this.instructions.length * 45;
-			}
-		}
-	}
-
-	show() {
-		let x = this.x;
-		let y = this.y;
-		for (let i = 0; i < this.instructions.length; i++) {
-			this.instructions[i].x = x;
-			this.instructions[i].y = y + i * 45;
-
-			this.instructions[i].show();
-		}
-	}
-
-	isValid(t) {
-		return true;
-	}
-
-	clear() {
-		this.stack = new Stack((width + PROGX) / 2, 0.8 * height);
-		this.instructions = [];
-		this.y = this.initialY;
-	}
-
-	isStackCreated() {
-		for (let p of this.instructions) {
-			if (p instanceof ResetTile)
-				return true;
-		}
-		return false;
-	}
-
-
-	updateY(s) {
-		if (this.instructions.length * 45 > height) {
-			this.y += s;
-			this.y = min(this.y, this.initialY);
-		}
-	}
-}
-
 
 let s;
 let program;
@@ -422,6 +23,8 @@ let pushDragging = null;
 let resetDragging = null;
 let pushValue;
 let pushSpot;
+
+let isStack = false;
 
 
 function preload() {
@@ -444,7 +47,7 @@ function setup() {
 	//run = new Tile(clear.x + clear.w + 15 , clear.y, "Lancer");
 
 
-	program = new Program(s);
+	program = new Program(isStack);
 
 	program.pushTile(new ResetTile(0, 0));
 	program.pushTile(new PushTile(0, 0, 1));
@@ -507,8 +110,8 @@ function draw() {
 		pushDragging.x = mouseX;
 		pushDragging.y = mouseY;
 
-		pushSpot.show();
-		pushDragging.show();
+		pushSpot.show(isStack);
+		pushDragging.show(isStack);
 
 
 	}
@@ -544,9 +147,18 @@ function mousePressed() {
 		pushValue = floor(random(10));
 		pushDragging = new ValueTile(mouseX, mouseY, pushValue, true);
 
-		let y = s.y - (s.values.length + 1) * s.hItem;
+		let y;
+		let x;
 
-		pushSpot = new ValueTile(s.x, y, "", true, color(0, 246, 255, 100));
+		if (isStack) {
+			x = s.x;
+			y = s.y - (s.values.length + 1) * s.hItem;
+		} else {
+			y = s.y;
+			x = s.x - (s.values.length + 1) * s.hItem;
+		}
+
+		pushSpot = new ValueTile(x, y, "", true, color(0, 246, 255, 100));
 	}
 
 }
