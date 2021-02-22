@@ -76,4 +76,12 @@ class Program {
 			this.y = min(this.y, this.initialY);
 		}
 	}
+
+	// updateFromStack(s) {
+	// 	this.stack = s;
+	// 	this.instructions = [new ResetTile(0, 0)];
+	// 	for (let i = 0; i < this.stack.length; i++) {
+	// 		this.instructions.push(new PushTile(0, 0, this.stack.values[i].t));
+	// 	}
+	// }
 }

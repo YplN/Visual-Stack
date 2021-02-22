@@ -40,8 +40,6 @@ class Queue {
 	}
 
 	pop() {
-		console.log(this);
-		console.log("Hey");
 		if (this.values.length > 0)
 			this.popped = this.values.shift();
 

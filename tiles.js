@@ -104,6 +104,12 @@ class ResetTile extends Tile {
 	}
 }
 
+class PancakeTile extends Tile {
+	constructor(x, y, t) {
+		super(x, y, "PancakeSorting(P)");
+	}
+}
+
 
 class ValueTile extends Tile {
 
@@ -129,7 +135,33 @@ class ValueTile extends Tile {
 		this.showAt(this.x, this.y, isStack);
 	}
 
-	showAt(x, y, isStack) {
+	showWithBars(c) {
+		this.showAtWithBars(this.x, this.y, c);
+	}
+
+	showAtWithBars(x, y, color) {
+		let c;
+		if (this.c == null) {
+			// if (this.access) {
+			// 	this.c = color(50, 250, 90);
+			// } else {
+			c = lerpColor(color(50, 250, 90), color(250, 88, 88), map(this.t, 0, 10, 0, 100) / 100);
+			// }
+		} else {
+			c = this.c;
+		}
+
+		if (color != null)
+			c = color;
+
+		fill(c);
+		strokeWeight(3);
+		stroke(0);
+		let w = map(this.t, 0, 20, 150, 450);
+		rect(x - w / 2, y - this.hItem / 2, w, this.hItem, 10);
+	}
+
+	showAt(x, y) {
 		if (this.c == null) {
 			if (this.access) {
 				this.c = color(50, 250, 90);
@@ -156,6 +188,9 @@ class ValueTile extends Tile {
 		noStroke();
 		text(this.t, x, y);
 	}
+
+
+
 
 	isOn(x, y, isStack) {
 		if (isStack != false) {
