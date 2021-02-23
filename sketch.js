@@ -414,6 +414,8 @@ function keyPressed() {
 
 	if (key == 'd' || key == 'D') {
 		detailCode = !detailCode;
+		if (!detailCode)
+			loop();
 	}
 
 	if (key == 'c' || key == 'C') {
