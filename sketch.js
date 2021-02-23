@@ -326,7 +326,7 @@ function displayPopArea(c) {
   noStroke();
 
   let colorb = lerpColor(BACKGROUND_COLOR, color(50, 250, 90), map(mouseX, 0.2 * width, 0, 0, 1));
-  setGradientCircle(-0.15 * width, height / 2, map(mouseX, 0.5 * width, 0, 0.1 * width, 0.5 * width), 1.5 * height, colorb, BACKGROUND_COLOR);
+  setGradientCircle(-0.15 * width, height / 2, min(0.5 * width, map(mouseX, 0.5 * width, 0, 0.1 * width, 0.5 * width)), 1.5 * height, colorb, BACKGROUND_COLOR);
   fill(DRAW_COLOR);
   textAlign(CENTER);
   strokeWeight(1);
