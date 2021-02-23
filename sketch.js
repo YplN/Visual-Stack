@@ -46,8 +46,10 @@ let secondFlipDoing = false;
 let flipValue;
 let speed = 3;
 let detailCode = true;
+let showingCode = false;
 
-let PANCAKE_CODE = ["n = 0", "Tant que n < taille(P)", "      maxI = indiceValMax(n)", "      flip(P, maxI)", "      flip(P, n)", "      n = n + 1"];
+
+let PANCAKE_CODE = ["n = taille(P)", "Tant que n > O", "      maxI = plus_grand(P,n)", "      flip(P, maxI)", "      flip(P, n)", "      n = n - 1"];
 let lineCode = 0;
 
 function preload() {
@@ -124,7 +126,8 @@ function draw() {
 
 	if (isSorting) {
 		pancakeSortAnimation();
-		showCode(lineCode);
+		if (showingCode)
+			showCode(lineCode);
 
 	} else {
 
@@ -412,6 +415,10 @@ function keyPressed() {
 	if (key == 'd' || key == 'D') {
 		detailCode = !detailCode;
 	}
+
+	if (key == 'c' || key == 'C') {
+		showingCode = !showingCode;
+	}
 }
 
 
@@ -517,7 +524,7 @@ function showCode(i) {
 	textSize(25);
 
 	let bbox = font.textBounds(PANCAKE_CODE[2], 0, 0, 25);
-	let x = 0.95 * width - bbox.w;
+	let x = 0.85 * width - bbox.w;
 	let y = 0.5 * height - 30 * PANCAKE_CODE.length / 2;
 
 	for (let j = 0; j < PANCAKE_CODE.length; j++) {
@@ -527,7 +534,7 @@ function showCode(i) {
 	if (i != null) {
 		let bbox = font.textBounds(PANCAKE_CODE[i], 0, 0, 25);
 		let w = bbox.w + 15;
-		let h = bbox.h + 15;
+		let h = bbox.h + 10;
 
 		fill(DRAW_COLOR);
 		rect(x, y + (i - 1) * 30, w, h);
