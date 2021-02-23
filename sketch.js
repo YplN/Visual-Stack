@@ -323,18 +323,10 @@ function showError(e) {
 
 
 function displayPopArea(c) {
-
   noStroke();
 
-  //setGradient(map(mouseX, 0.5 * width, 0, -0.7 * width, -0.3 * width), 0, width / 2, height, lerpColor(COLOR_POP, color(50, 250, 90), map(mouseX, 0.8 * width, 0, 0, 100) / 100), BACKGROUND_COLOR, 2);
   let colorb = lerpColor(BACKGROUND_COLOR, color(50, 250, 90), map(mouseX, 0.2 * width, 0, 0, 1));
-  setGradientCircle(-200, height / 2, map(mouseX, 0.5 * width, 0, 0.1 * width, 0.5 * width), height, colorb, BACKGROUND_COLOR);
-  // fill(colorb);
-  // rect(100, 100, 100, 100);
-
-
-  // setGradientCircle(100, 200, 50, color(255, 0, 0), BACKGROUND_COLOR);
-
+  setGradientCircle(-0.15 * width, height / 2, map(mouseX, 0.5 * width, 0, 0.1 * width, 0.5 * width), 1.5 * height, colorb, BACKGROUND_COLOR);
   fill(DRAW_COLOR);
   textAlign(CENTER);
   strokeWeight(1);
@@ -345,30 +337,6 @@ function displayPopArea(c) {
     text("défiler(F)", 0.1 * width, 0.5 * height);
   }
 }
-
-
-// function setGradient(x, y, w, h, c1, c2, axis) {
-//   noFill();
-//
-//   if (axis === 1) {
-//     // Top to bottom gradient
-//     for (let i = y; i <= y + h; i++) {
-//       let inter = map(i, y, y + h, 0, 1);
-//       let c = lerpColor(c1, c2, inter);
-//       stroke(c);
-//       line(x, i, x + w, i);
-//     }
-//   } else if (axis === 2) {
-//     // Left to right gradient
-//     for (let i = x; i <= x + w; i++) {
-//       let inter = map(i, x, x + w, 0, 1);
-//       let c = lerpColor(c1, c2, inter);
-//       stroke(c);
-//       line(i, y, i, y + h);
-//     }
-//   }
-// }
-
 
 
 
