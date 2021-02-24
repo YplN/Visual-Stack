@@ -220,7 +220,7 @@ function mousePressed() {
     }
 
     if (pushB.isOn(mouseX, mouseY) && program.isStackCreated()) {
-      pushValue = floor(random(20));
+      pushValue = floor(1 + random(20));
       pushDragging = new ValueTile(mouseX, mouseY, pushValue, true);
 
       let y;
@@ -258,7 +258,7 @@ function mouseReleased() {
 
   if (!isSorting) {
 
-    if (s.dragging != null && !error && mouseX < 0.25 * width) {
+    if (s.dragging != null && !error && isOnPopArea()) {
       //s.pop();
       program.pushTile(new PopTile(0, 0));
     }
@@ -273,7 +273,7 @@ function mouseReleased() {
     if (pushB.isOn(mouseX, mouseY)) {
       // s.push(floor(random(10)));
       if (program.isStackCreated()) {
-        program.pushTile(new PushTile(0, 0, floor(random(20))));
+        program.pushTile(new PushTile(0, 0, floor(1 + random(20))));
       }
     }
 
@@ -305,11 +305,8 @@ function showError(e) {
 
   textSize(40);
   let bbox = font.textBounds(e, 0, 0, 35);
-  //let w = bbox.w + 20;
   let w = (width - PROGX);
   let h = bbox.h + 20;
-
-  // fill(220);
 
   fill(ERROR_COLOR);
   noStroke();
@@ -327,10 +324,19 @@ function displayPopArea(c) {
 
   let colorb = lerpColor(BACKGROUND_COLOR, color(50, 250, 90), map(mouseX, 0.2 * width, 0, 0, 1));
   setGradientCircle(-0.15 * width, height / 2, min(0.5 * width, map(mouseX, 0.5 * width, 0, 0.1 * width, 0.5 * width)), 1.5 * height, colorb, BACKGROUND_COLOR);
-  fill(DRAW_COLOR);
   textAlign(CENTER);
-  strokeWeight(1);
   textSize(30);
+
+  if (isOnPopArea()) {
+    if (!isStack) {
+      stroke(DRAW_COLOR);
+      strokeWeight(2);
+    }
+    fill(50, 250, 90);
+  } else {
+    noStroke();
+    fill(DRAW_COLOR);
+  }
   if (isStack) {
     text("dépiler(P)", 0.15 * width, 0.5 * height);
   } else {
@@ -356,7 +362,7 @@ function setGradientCircle(x, y, r, h, c1, c2) {
 
 
 function isOnPopArea() {
-  return (mouseX > 0.75 * width);
+  return (mouseX < 0.15 * width);
 }
 
 
@@ -364,9 +370,9 @@ function mouseWheel(event) {
 
   if (pushDragging != null) {
     if (event.delta > 0) {
-      pushDragging.t = max(0, pushDragging.t - 1);
+      pushDragging.t = max(1, pushDragging.t - 1);
     } else {
-      pushDragging.t = min(19, pushDragging.t + 1);
+      pushDragging.t = min(20, pushDragging.t + 1);
     }
   }
   if (mouseX > width - PROGX) {
@@ -547,10 +553,9 @@ function showCode(i) {
     let h = bbox.h + 10;
 
     fill(DRAW_COLOR);
-    rect(x, y + (i - 1) * 30, w, h);
+    rect(x, y + (i - 1) * 30 + 4, w, h);
     fill(BACKGROUND_COLOR);
     noStroke();
     text(PANCAKE_CODE[i], x, y + i * 30);
   }
-  // text("n = 0\nTant que n < taille(P)\n\t\tmaxI = indiceValeurMax(n)\n\t\tflip(s,maxI)\n\t\tflip(s,n)\n\t\tn = n + 1\n", width / 2, height / 2);
 }
