@@ -58,8 +58,6 @@ class Queue {
 
 
   show() {
-
-
     if (this.dragging != null) {
       if (this.values[this.dragging].access) {
 
@@ -76,9 +74,9 @@ class Queue {
 
     for (let i = 0; i < this.values.length; i++) {
       if (i == this.dragging) {
-        this.values[i].showAt(mouseX, mouseY, false);
+        this.values[i].showAt(mouseX, mouseY);
       } else {
-        this.values[i].show(false);
+        this.values[i].show();
       }
     }
 

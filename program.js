@@ -4,11 +4,11 @@ class Program {
       this.stack = new Stack((width - PROGX) / 2, 0.8 * height);
       this.isStack = true;
     } else {
-      this.stack = new Queue(1.5 * PROGX, 0.5 * height);
+      this.stack = new Queue((width - PROGX) / 2 - 50, 0.5 * height);
       this.isStack = false;
     }
     this.instructions = [];
-    this.x = width - PROGX / 2;
+    this.x = width - PROGX + 10;
     this.initialY = 0.03 * height + 10;
     this.y = this.initialY;
   }
@@ -19,7 +19,7 @@ class Program {
         if (this.isStack) {
           this.stack = new Stack((width - PROGX) / 2, 0.8 * height);
         } else {
-          this.stack = new Queue(1.5 * PROGX, 0.5 * height);
+          this.stack = new Queue((width / 2 - PROGX) / 2 - 50, 0.5 * height);
         }
       }
       if (t instanceof PopTile) {
@@ -40,10 +40,17 @@ class Program {
     let x = this.x;
     let y = this.y;
     for (let i = 0; i < this.instructions.length; i++) {
-      this.instructions[i].x = x;
+      this.instructions[i].x = x + this.instructions[i].w / 2;
       this.instructions[i].y = y + i * 45;
 
       this.instructions[i].show();
+
+      if (this.instructions[i] instanceof PopTile) {
+        textSize(25);
+        textAlign(LEFT, CENTER);
+        fill(DRAW_COLOR);
+        text(": " + this.instructions[i].v, this.instructions[i].x + this.instructions[i].w / 2 + 10, y + i * 45);
+      }
     }
   }
 

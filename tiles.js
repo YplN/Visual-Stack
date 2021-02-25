@@ -30,7 +30,6 @@ class Tile {
     let buttonColorHover = DRAW_COLOR;
 
     if (this.c != null) {
-
       textColor = this.c;
       buttonColor = color(BACKGROUND_COLOR);
       textColorHover = color(BACKGROUND_COLOR);
@@ -65,13 +64,15 @@ class Tile {
 
 
 class PopTile extends Tile {
-  constructor(x, y) {
+  constructor(x, y, v) {
     let t = "dépiler(P)";
     if (!isStack) {
       t = "défiler(F)";
     }
     super(x, y, t);
+    this.v = v;
   }
+
 }
 
 
@@ -131,28 +132,29 @@ class ValueTile extends Tile {
     this.hItem = 50;
   }
 
-  show(isStack) {
-    this.showAt(this.x, this.y, isStack);
+  show(c) {
+    this.showAt(this.x, this.y, c);
   }
 
   showWithBars(c) {
     this.showAtWithBars(this.x, this.y, c);
   }
 
-  showAtWithBars(x, y, color) {
+  showAtWithBars(x, y, mcolor) {
     let c;
     if (this.c == null) {
-      // if (this.access) {
-      // 	this.c = color(50, 250, 90);
-      // } else {
-      c = lerpColor(color(50, 250, 90), color(250, 88, 88), map(this.t, 0, 10, 0, 100) / 100);
-      // }
+      if (this.access) {
+        c = color(50, 250, 90);
+      } else {
+        //c = lerpColor(color(50, 250, 90), color(250, 88, 88), map(this.t, 0, 10, 0, 100) / 100);
+        c = color(250, 88, 88);
+      }
     } else {
       c = this.c;
     }
 
-    if (color != null)
-      c = color;
+    if (mcolor != null)
+      c = mcolor;
 
     fill(c);
     strokeWeight(3);
@@ -161,16 +163,20 @@ class ValueTile extends Tile {
     rect(x - w / 2, y - this.hItem / 2, w, this.hItem, 10);
   }
 
-  showAt(x, y) {
+  showAt(x, y, c) {
+    let mcolor = this.c;
     if (this.c == null) {
       if (this.access) {
-        this.c = color(50, 250, 90);
+        mcolor = color(50, 250, 90);
       } else {
-        this.c = color(250, 88, 88);
+        mcolor = color(250, 88, 88);
       }
     }
+    if (c != null) {
+      mcolor = c;
+    }
 
-    fill(this.c);
+    fill(mcolor);
     strokeWeight(3);
     stroke(0);
 
@@ -192,7 +198,7 @@ class ValueTile extends Tile {
 
 
 
-  isOn(x, y, isStack) {
+  isOn(x, y) {
     if (isStack != false) {
       return (abs(x - this.x) <= this.w / 2 && abs(y - this.y) <= this.hItem / 2);
     } else {

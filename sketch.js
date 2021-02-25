@@ -48,6 +48,8 @@ let speed = 3;
 let detailCode = true;
 let showingCode = false;
 
+let poppedTile = null;
+
 
 let PANCAKE_CODE = ["n = taille(P)", "Tant que n > O", "      maxI = plus_grand(P,n)", "      flip(P, maxI)", "      flip(P, n)", "      n = n - 1"];
 let lineCode = 0;
@@ -135,6 +137,21 @@ function draw() {
 
     s.show();
 
+    if (poppedTile != null) {
+      poppedTile.show(color(120, 120, 120));
+      textSize(20);
+      // stroke(0);
+      textAlign(CENTER, CENTER);
+      noStroke();
+      fill(DRAW_COLOR);
+
+      if (isStack) {
+        text("valeur\nretournée", poppedTile.x, 0.8 * height);
+      } else {
+        text("valeur\nretournée", poppedTile.x, 0.8 * height + 60);
+      }
+    }
+
 
 
     if (s.isEmpty()) {
@@ -178,8 +195,8 @@ function draw() {
       pushDragging.x = mouseX;
       pushDragging.y = mouseY;
 
-      pushSpot.show(isStack);
-      pushDragging.show(isStack);
+      pushSpot.show();
+      pushDragging.show();
 
 
     }
@@ -260,13 +277,21 @@ function mouseReleased() {
 
     if (s.dragging != null && !error && isOnPopArea()) {
       //s.pop();
-      program.pushTile(new PopTile(0, 0));
+      // console.log(s.values[s.dragging].t);
+      poppedTile = new ValueTile((width / 2 - PROGX) / 2, 0.8 * height - 50, s.values[s.dragging].t);
+      program.pushTile(new PopTile(0, 0, s.values[s.dragging].t));
     }
 
     if (popB.isOn(mouseX, mouseY)) {
       if (!s.isEmpty()) {
         // s.pop();
-        program.pushTile(new PopTile(0, 0));
+        if (isStack) {
+          poppedTile = new ValueTile((width / 2 - PROGX) / 2, 0.8 * height - 50, s.values[s.values.length - 1].t);
+          program.pushTile(new PopTile(0, 0, s.values[s.values.length - 1].t));
+        } else {
+          poppedTile = new ValueTile((width / 2 - PROGX) / 2, 0.8 * height - 50, s.values[0].t);
+          program.pushTile(new PopTile(0, 0, s.values[0].t));
+        }
       }
     }
 
@@ -274,21 +299,25 @@ function mouseReleased() {
       // s.push(floor(random(10)));
       if (program.isStackCreated()) {
         program.pushTile(new PushTile(0, 0, floor(1 + random(20))));
+        poppedTile = null;
       }
     }
 
     if (reset.isOn(mouseX, mouseY)) {
       //s = new Stack(width / 2, 0.8 * height);
       program.pushTile(new ResetTile(0, 0));
+      poppedTile = null;
     }
 
 
     if (clear.isOn(mouseX, mouseY)) {
       program.clear();
+      poppedTile = null;
     }
 
     if (pushDragging != null && pushSpot.isOn(mouseX, mouseY)) {
       program.pushTile(new PushTile(0, 0, pushDragging.t));
+      poppedTile = null;
     }
 
     pushDragging = null;
@@ -393,6 +422,8 @@ function switchBetweenModes() {
   pushB = new PushTile((width - PROGX) * 0.5, 0.95 * height);
   popB = new PopTile(pushB.x + pushB.w + 10, pushB.y);
   reset = new ResetTile(pushB.x - pushB.w - 10, pushB.y);
+
+  poppedTile = null;
 
   let tmp = BACKGROUND_COLOR;
   BACKGROUND_COLOR = DRAW_COLOR;
