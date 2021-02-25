@@ -559,6 +559,7 @@ function pancakeSortAnimation() {
         lineCode = 0;
         //program.updateFromStack(s);
         program.pushTile(new PancakeTile(0, 0));
+        poppedTile = null;
       }
     }
   }
