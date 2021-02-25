@@ -99,20 +99,6 @@ function setup() {
 
   s = program.stack;
 
-  // for (let V of s.values) {
-  // 	console.log(V.t);
-  // }
-  // console.log(s.maxIndex(0));
-  //s.flip(3);
-  // console.log(s.maxIndex(5));
-  //s.flip(3);
-  //s.flip(0);
-  // for (let V of s.values) {
-  // 	console.log(V.t);
-  // }
-
-  //isSorting = false;
-  // s.pancake_sort();
   n = 0;
 }
 
@@ -140,7 +126,6 @@ function draw() {
     if (poppedTile != null) {
       poppedTile.show(color(120, 120, 120));
       textSize(20);
-      // stroke(0);
       textAlign(CENTER, CENTER);
       noStroke();
       fill(DRAW_COLOR);
@@ -167,8 +152,10 @@ function draw() {
 
     if (!program.isStackCreated()) {
       pushB.c = color(255, 0, 0);
+      pancakeB.c = color(255, 0, 0);
     } else {
       pushB.c = null;
+      pancakeB.c = null;
       if (isStack) {
         text("P", 0.5 * (width - PROGX), 0.8 * height);
       } else {
@@ -184,7 +171,7 @@ function draw() {
     }
 
 
-    if (pushB.isOn(mouseX, mouseY) && !program.isStackCreated()) {
+    if ((pushB.isOn(mouseX, mouseY) || pancakeB.isOn(mouseX, mouseY)) && !program.isStackCreated()) {
       errorStackNotCreated = true;
     } else {
       errorStackNotCreated = false;
@@ -276,15 +263,12 @@ function mouseReleased() {
   if (!isSorting) {
 
     if (s.dragging != null && !error && isOnPopArea()) {
-      //s.pop();
-      // console.log(s.values[s.dragging].t);
       poppedTile = new ValueTile((width / 2 - PROGX) / 2, 0.8 * height - 50, s.values[s.dragging].t);
       program.pushTile(new PopTile(0, 0, s.values[s.dragging].t));
     }
 
     if (popB.isOn(mouseX, mouseY)) {
       if (!s.isEmpty()) {
-        // s.pop();
         if (isStack) {
           poppedTile = new ValueTile((width / 2 - PROGX) / 2, 0.8 * height - 50, s.values[s.values.length - 1].t);
           program.pushTile(new PopTile(0, 0, s.values[s.values.length - 1].t));
@@ -296,7 +280,6 @@ function mouseReleased() {
     }
 
     if (pushB.isOn(mouseX, mouseY)) {
-      // s.push(floor(random(10)));
       if (program.isStackCreated()) {
         program.pushTile(new PushTile(0, 0, floor(1 + random(20))));
         poppedTile = null;
@@ -304,7 +287,6 @@ function mouseReleased() {
     }
 
     if (reset.isOn(mouseX, mouseY)) {
-      //s = new Stack(width / 2, 0.8 * height);
       program.pushTile(new ResetTile(0, 0));
       poppedTile = null;
     }
@@ -382,7 +364,6 @@ function setGradientCircle(x, y, r, h, c1, c2) {
     let inter = map(i, 0, r, 0, 1);
     let c = lerpColor(c1, c2, inter);
     stroke(c);
-    //line(x, i, x + w, i);
     ellipse(x, y, i, h);
   }
 
@@ -397,21 +378,31 @@ function isOnPopArea() {
 
 function mouseWheel(event) {
 
-  if (pushDragging != null) {
-    if (event.delta > 0) {
-      pushDragging.t = max(1, pushDragging.t - 1);
-    } else {
-      pushDragging.t = min(20, pushDragging.t + 1);
-    }
-  }
-  if (mouseX > width - PROGX) {
-    if (event.delta > 0) {
-      // program.y += -45;
-      program.updateY(-45);
-    } else {
-      // program.y += 45;
-      program.updateY(45);
+  if (isSorting) {
 
+    if (event.delta > 0) {
+      speed = speed * 0.95;
+    } else {
+      speed = speed * 1.05;
+    }
+  } else {
+
+    if (pushDragging != null) {
+      if (event.delta > 0) {
+        pushDragging.t = max(1, pushDragging.t - 1);
+      } else {
+        pushDragging.t = min(20, pushDragging.t + 1);
+      }
+    }
+    if (mouseX > width - PROGX) {
+      if (event.delta > 0) {
+        // program.y += -45;
+        program.updateY(-45);
+      } else {
+        // program.y += 45;
+        program.updateY(45);
+
+      }
     }
   }
 }
